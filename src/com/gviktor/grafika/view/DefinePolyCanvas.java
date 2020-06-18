@@ -66,6 +66,8 @@ public class DefinePolyCanvas extends DrawingCanvas {
 			}
 			float dx = (x-x0),dy=(y-y0);
 			if(poligon.size()>0 && dx*dx+dy*dy < difference*pixelSize*pixelSize) {
+				System.out.println("poligon is   "+ CoordinateComputer.isPolygonCounterClockwiseString(poligon));
+				System.out.println(CoordinateComputer.areaSize(poligon));
 				poligon.addVertex(new Point2D(x0,y0));
 				repaint();
 				ready=true;
