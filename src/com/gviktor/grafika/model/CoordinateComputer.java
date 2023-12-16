@@ -70,6 +70,55 @@ public class CoordinateComputer {
 		return (countOrientation(a,b,p)>=0 && countOrientation(b,c,p)>=0 && countOrientation(c,a,p)>=0 );
 	}
 	public static boolean insidePolygon(Point p, Poligon polygon) {
-		return false;
+		float x,y;
+		boolean b = false;
+		int n=polygon.size(),j=n-1;
+		x= p.getX();y= p.getY();
+		for(int i = 0; i<n;i++) {
+			Point pointj = polygon.getVertexOfIndex(j);
+			Point pointi  = polygon.getVertexOfIndex(i);
+			if((pointj.getY() <= y && y < pointi.getY() && CoordinateComputer.countOrientation(pointj,pointi,p) > 0) || (pointi.getY() <= y && y < pointj.getY() && CoordinateComputer.countOrientation(pointi,pointj,p) > 0)) {
+				b=!b;
+			}
+			j=i;
+		}
+		return b;
+	}
+	public static boolean isPointOnLineSegments(Point2D a,Point2D b, Point2D p) {
+		float  pY=p.getY(), pX=p.getX(),aX =a.getX(), bX= b.getX(),aY=a.getY(),bY=b.getY(), distanceX=bX-aX, distanceY=aY-bY;
+		float epsilon = 0.0001f *(distanceX*distanceX +distanceY * distanceY);
+		boolean isPXCordBettweenSegment=(aX!=bX) &&(aX <= pX && pX <= bX || bX <= pX && pX <=aX );
+		boolean isPYCordBetweenSegment=(aX==bX) && (aY <= pY && pY <= bY || bY <= pY && pY <=aY );
+		return (isPXCordBettweenSegment||isPYCordBetweenSegment) && Math.abs(CoordinateComputer.countOrientation(a,b,p))< epsilon;
+	}
+	
+	//Do the sameas isPointOnLineSegments() but in a different approach
+	public static boolean isPointOnProjectionOfLine(Point2D a,Point2D b, Point2D p) {
+		float  pY=p.getY(), pX=p.getX(),aX =a.getX(), bX= b.getX(),aY=a.getY(),bY=b.getY(), distanceX=bX-aX, distanceY=aY-bY;
+		float len2=distanceX*distanceX +distanceY * distanceY;
+		float epsilon = 0.0001f *len2;
+		float innerProduct = distanceX*(pX-aX)- distanceY *(pY-aY);
+		return innerProduct > -epsilon && innerProduct<len2+epsilon ;
+	}
+	public static void tessellatePolygon(Poligon p,Triangle[] triangles) {
+		//Polygon vertexes must be counter clockwise with n vertexes it will create n-2 trinagles
+		int n = p.size(),indexA,indexB,indexC; //Indexes of the three point of the triangle
+		int j = n-1;
+		int[] next = new int[n];
+		for(int i = 0; i< n;i++) {
+			next[j] =i;
+			j=i;
+		}
+		
+		for(int k=0;k<n-2;k++) {
+			
+		}
+	
+	}
+	public static float distance2(Point a ,Point b) {
+		float distance=0.0f;
+		float  aX =a.getX(), bX= b.getX(),aY=a.getY(),bY=b.getY(), distanceX=bX-aX, distanceY=aY-bY;
+		distance=distanceX*distanceX +distanceY * distanceY;
+		return distance;
 	}
 }
